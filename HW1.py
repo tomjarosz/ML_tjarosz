@@ -7,8 +7,8 @@ data = pd.read_csv('mock_student_data.csv')
 df = pd.DataFrame(data, )
 
 def histogram(df):
-    df.hist()
-    plt.savefig('histogram')
+    df.loc[:, ['Age', 'GPA', 'Days_missed']].hist()
+    plt.savefig('histogram.png')   
 
 def summary_stats(df):
     
@@ -29,30 +29,23 @@ def summary_stats(df):
     rows = ['Mean', 'Median', 'Mode', 'Standard Deviation', 'Missing Values']
 
     stats = pd.DataFrame(data, rows)
+    return stats
     stats.to_csv('descriptive_statistics.csv')
-    print(stats)
-
-summary_stats(df)
-
-def genderize(df):
-
-    no_gender = df[df['Gender'].isnull()]['First_name']
-    for name in no_gender:
-        gender = gender_api(name)
-
-        df.loc[df['Gender'].isnull(),'Gender'] = gender
-
-    df.to_csv('genders_filled_in.csv')    
         
-
 def gender_api(first_name):
 
     webservice_url = "https://api.genderize.io/?name=" + first_name
     gender_data = json.loads(urllib.request.urlopen(webservice_url).read().decode("utf8"))
     return gender_data["gender"]
 
+def genderize(df):
 
-# print(genderize(df))    
+    no_gender = df[df['Gender'].isnull()]['First_name']
+    for name in no_gender:
+        gender = gender_api(name)
+        df.loc[(df['Gender'].isnull()) & (df['First_name'] == name),'Gender'] = gender
+
+    df.to_csv('genders_filled_in.csv')
 
 def missing_values_means (df):
     age_mean = round((df['Age'].mean()), 1)
@@ -63,7 +56,7 @@ def missing_values_means (df):
     df['GPA'].fillna(GPA_mean, inplace = True)
     df['Days_missed'].fillna(days_missed_mean, inplace = True)
 
-    df.to_csv('missing_values_means.csv')    
+    df.to_csv('missing_values_means.csv')
 
 def missing_values_cond_means (df):
 
@@ -86,3 +79,10 @@ def missing_values_cond_means (df):
     df.loc[(df['Graduated'] == 'No') & (df['Days_missed'].isnull()),'Days_missed'] = days_missed_nograd_mean
     
     df.to_csv('missing_values_cond_means.csv')
+
+def drop_missing_data(df):
+    
+    df = df[(df['Age'].notnull()) & (df['GPA'].notnull()) & (df['Days_missed'].notnull())]
+    df.to_csv('values_with_complete_data.csv')
+    
+drop_missing_data(df)    
