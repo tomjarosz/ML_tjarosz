@@ -20,7 +20,6 @@ def explore_data(df):
     descriptive.to_csv('descriptive_statistics.csv') 
     mode.to_csv('modes.csv')
     missing_values.to_csv('missing_values.csv')
-
   
 def find_null_values(df):
     df_variables = pd.melt(df)
@@ -32,6 +31,5 @@ def histogram(df):
 
     values = df.columns
     for value in values:
-        df.hist[value]
-        plt.savefig(value + '_histogram.png')
-        plt.close    
+        df.hist(value)
+        plt.savefig(value)
