@@ -1,6 +1,6 @@
 from read_explore import *
 from process_data import *
-from models_draft import *
+from models import *
 
 INDEP_VARS = ['RevolvingUtilizationOfUnsecuredLines', 'age',
        'NumberOfTime30-59DaysPastDueNotWorse', 'DebtRatio', 'MonthlyIncome',
@@ -48,10 +48,9 @@ categ_to_binary(test_data, age_labels, 'AGE', 'AgeBins')
 categ_to_binary(train_data, monthly_income_labels, 'MONTHLYINCOME', 'MonthlyIncomeBins')
 categ_to_binary(test_data, monthly_income_labels, 'MONTHLYINCOME', 'MonthlyIncomeBins')
 
-# x_train, x_validate, y_train, y_validate = prep_model_data(train_data, DEP_VARS, INDEP_VARS)
-# fit_model(x_train, x_validate, y_train, y_validate, MODELS, CLASSIFIERS, PARAMETERS)
+x_train, x_validate, y_train, y_validate = prep_model_data(train_data, DEP_VARS, INDEP_VARS)
+fit_model(x_train, x_validate, y_train, y_validate, MODELS, CLASSIFIERS, PARAMETERS)
 
-model, parameters, accuracy, precision = best_model('AUC')
-results = score_data(model, parameters, test_data, DEP_VARS, INDEP_VARS)
-
-# result.to_csv('deliquency_prediction.csv')
+model, parameters, accuracy, precision, recall, AUC, F1 = best_model('AUC')
+result = score_data(model, parameters, test_data, DEP_VARS, INDEP_VARS, train_data)
+# result.to_csv('delinqunecy_prediction.csv')

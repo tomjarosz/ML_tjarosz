@@ -26,7 +26,7 @@ def missing_values_cond_mean(df, variable, cond_on):
     Fills NA values in a dataframe with conditional means 
     that are determined by the user and specific dataset
     '''
-    #customize the conditional mean function based on the dataset
+    # customize the conditional mean function based on the dataset
     pass
 
 def discretize_continuous_var (df, bins, var_labels, depend_var, column_name):
