@@ -2,13 +2,17 @@ import pandas as pd
 import json
 import numpy as np
 
-def missing_values_means(df, variable):
+def missing_values_means(df, variable, impute_value):
     '''
-    Fills NA values in a dataframe with the means
-    of the feature
+    Fills NA values in a dataframe with the impute value if it 
+    is provided, otherwise fills NA value with the variable mean.
     '''
-    df[variable].fillna(df[variable].mean(), inplace = True)
-    return df
+    if impute_value:
+        df[variable].fillna(impute_value, inplace = True)
+
+    else:
+        df[variable].fillna(df[variable].mean(), inplace = True)
+        return df, df[variable].mean()
  
 def missing_values_zero(df, variable):
     '''
